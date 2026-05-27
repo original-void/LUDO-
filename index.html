@@ -19,13 +19,62 @@
     padding: 12px;
   }
 
-  /* 4x4 board layout */
+.player-cards {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+.player-card {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    padding: 5px 10px;
+    border-radius: 50px;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+    pointer-events: auto;
+  }
+
+.player-card.active {
+    border-color: #fff;
+    box-shadow: 0 0 15px rgba(255,255,255,0.6);
+    transform: scale(1.05);
+  }
+
+.player-card img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+.player-name { font-size: 12px; font-weight: 700; }
+.player-percent { font-size: 10px; opacity: 0.8; }
+
+.card-red { top: 8px; left: 8px; }
+.card-green { top: 8px; right: 8px; }
+.card-yellow { bottom: 8px; left: 8px; }
+.card-blue { bottom: 8px; right: 8px; }
+
 .board-wrapper {
     background: linear-gradient(145deg, #e8d5b7, #c9b088);
     padding: 12px;
     border-radius: 28px;
     box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     width: min(90vw, 400px);
+    position: relative;
   }
 
   #board {
@@ -48,27 +97,18 @@
     justify-content: center;
   }
 
-  /* 4 colored homes - corners */
 .home-red { background: linear-gradient(135deg, #ff5252, #d32f2f); border-radius: 20px 0 0 0; }
 .home-green { background: linear-gradient(135deg, #66bb6a, #388e3c); border-radius: 0 20px 0 0; }
 .home-yellow { background: linear-gradient(135deg, #ffd54f, #fbc02d); border-radius: 0 0 0 20px; }
 .home-blue { background: linear-gradient(135deg, #42a5f5, #1976d2); border-radius: 0 0 20px 0; }
 
-  /* Center */
-.center {
-    background: conic-gradient(from 45deg, #f44336, #ffc107, #2196f3, #8bc34a, #f44336);
-    border-radius: 12px;
-  }
+.center { background: conic-gradient(from 45deg, #f44336, #ffc107, #2196f3, #8bc34a, #f44336); border-radius: 12px; }
+.path { background: #e0e0e0; }
 
-  /* Path arms */
-.path {
-    background: #e0e0e0;
-  }
-
-  /* HD 3D Tokens - smaller now */
+/* FIXED TOKEN SIZE */
 .token {
-    width: 65%;
-    height: 65%;
+    width: 45%;
+    height: 45%;
     position: absolute;
     cursor: pointer;
     filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
@@ -91,7 +131,6 @@
 .token.yellow::before { background: radial-gradient(circle at 30% 25%, #ffe082, #ffd54f); }
 .token.blue::before { background: radial-gradient(circle at 30% 25%, #90caf9, #42a5f5); }
 
-  /* Dice */
 .dice-box {
     width: 70px;
     height: 70px;
@@ -128,6 +167,40 @@
 
 <div class="board-wrapper">
   <div id="board"></div>
+
+  <div class="player-cards">
+    <div class="player-card card-red active" id="card-red">
+      <img src="https://i.pravatar.cc/40?img=1" alt="">
+      <div class="player-info">
+        <div class="player-name">Rahul</div>
+        <div class="player-percent">0%</div>
+      </div>
+    </div>
+
+    <div class="player-card card-green" id="card-green">
+      <img src="https://i.pravatar.cc/40?img=2" alt="">
+      <div class="player-info">
+        <div class="player-name">Priya</div>
+        <div class="player-percent">0%</div>
+      </div>
+    </div>
+
+    <div class="player-card card-yellow" id="card-yellow">
+      <img src="https://i.pravatar.cc/40?img=3" alt="">
+      <div class="player-info">
+        <div class="player-name">Aman</div>
+        <div class="player-percent">0%</div>
+      </div>
+    </div>
+
+    <div class="player-card card-blue" id="card-blue">
+      <img src="https://i.pravatar.cc/40?img=4" alt="">
+      <div class="player-info">
+        <div class="player-name">Amala</div>
+        <div class="player-percent">0%</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="turn-indicator" id="turn">Red's Turn</div>
@@ -135,44 +208,33 @@
 
 <script>
 const colors = ['red', 'green', 'yellow', 'blue'];
+const playerNames = ['Rahul', 'Priya', 'Aman', 'Amala'];
 let currentPlayer = 0;
 let diceValue = 0;
 let hasRolled = false;
 let gameOver = false;
 let isRolling = false;
 
-// 4 tokens per color, -1 = home, 0-15 = path positions, 16 = center
 let tokens = {};
 colors.forEach(c => tokens[c] = [-1,-1,-1,-1]);
 
-// Path layout for 4x4 board:
-// 0: Red arm, 1: Green arm, 2: Yellow arm, 3: Blue arm
-// Each arm has 4 steps to center
 const pathCoords = [
-  // Red arm: row 0, col 1-2-3-3
   [0,1], [0,2], [0,3], [1,3],
-  // Green arm: row 1-2-3, col 3
   [2,3], [3,3], [3,2], [3,1],
-  // Yellow arm: row 3, col 0-1-2
   [3,0], [2,0], [1,0], [0,0],
-  // Blue arm: row 0-1-2, col 0
-  [1,1], [2,1], [2,2], [1,2] // These 4 lead to center
+  [1,1], [2,1], [2,2], [1,2]
 ];
 
 const homePositions = {
-  red: [[0,0]],
-  green: [[0,3]],
-  yellow: [[3,0]],
-  blue: [[3,3]]
+  red: [[0,0]], green: [[0,3]], yellow: [[3,0]], blue: [[3,3]]
 };
 
-const centerPos = [1,2]; // Center cell
+const centerPos = [1,2];
 
 function createBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
 
-  // Create 4x4 grid
   for(let r=0; r<4; r++) {
     for(let c=0; c<4; c++) {
       const cell = document.createElement('div');
@@ -184,18 +246,15 @@ function createBoard() {
       else if(r===0 && c===3) cell.className += ' home-green';
       else if(r===3 && c===0) cell.className += ' home-yellow';
       else if(r===3 && c===3) cell.className += ' home-blue';
-      else if(r===1 && c===1 || r===1 && c===2 || r===2 && c===1 || r===2 && c===2) {
-        cell.className += ' center';
-      }
-      else {
-        cell.className += ' path';
-      }
+      else if((r===1 || r===2) && (c===1 || c===2)) cell.className += ' center';
+      else cell.className += ' path';
 
       board.appendChild(cell);
     }
   }
   createTokens();
   positionTokens();
+  updateProgress();
 }
 
 function createTokens() {
@@ -217,25 +276,32 @@ function positionTokens() {
       const tokenEl = document.querySelector(`.token[data-color="${color}"][data-idx="${idx}"]`);
       let row, col;
 
-      if(pos === -1) {
-        // In home
-        [row, col] = homePositions[color][0];
-      } else if(pos === 16) {
-        // At center
-        [row, col] = centerPos;
-      } else {
-        // On path
-        [row, col] = pathCoords[pos];
-      }
+      if(pos === -1) [row, col] = homePositions[color][0];
+      else if(pos === 16) [row, col] = centerPos;
+      else [row, col] = pathCoords[pos];
 
       const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
       const boardRect = document.getElementById('board').getBoundingClientRect();
       const cellRect = cell.getBoundingClientRect();
 
-      tokenEl.style.left = (cellRect.left - boardRect.left + cellRect.width/2 - 20) + 'px';
-      tokenEl.style.top = (cellRect.top - boardRect.top + cellRect.height/2 - 20) + 'px';
+      // Fixed centering for 45% size
+      tokenEl.style.left = (cellRect.left - boardRect.left + cellRect.width/2 - cellRect.width*0.225) + 'px';
+      tokenEl.style.top = (cellRect.top - boardRect.top + cellRect.height/2 - cellRect.height*0.225) + 'px';
     });
   });
+}
+
+function updateProgress() {
+  colors.forEach((color, i) => {
+    const finished = tokens[color].filter(p => p === 16).length;
+    const percent = Math.round((finished / 4) * 100);
+    document.querySelector(`#card-${color}.player-percent`).textContent = percent + '%';
+  });
+}
+
+function updateActiveCard() {
+  document.querySelectorAll('.player-card').forEach(card => card.classList.remove('active'));
+  document.getElementById(`card-${colors[currentPlayer]}`).classList.add('active');
 }
 
 document.getElementById('dice').onclick = () => {
@@ -259,8 +325,8 @@ document.getElementById('dice').onclick = () => {
 function canMove() {
   const color = colors[currentPlayer];
   return tokens[color].some(pos => {
-    if(pos === 16) return false; // Already at center
-    if(pos === -1) return diceValue === 6; // Need 6 to exit home
+    if(pos === 16) return false;
+    if(pos === -1) return diceValue === 6;
     return true;
   });
 }
@@ -270,9 +336,8 @@ function moveToken(color, idx) {
 
   let pos = tokens[color][idx];
 
-  // Exit home on 6
   if(pos === -1 && diceValue === 6) {
-    tokens[color][idx] = 0; // Start of red arm
+    tokens[color][idx] = 0;
     positionTokens();
     endTurn();
     return;
@@ -280,9 +345,8 @@ function moveToken(color, idx) {
 
   if(pos >= 0) {
     let newPos = pos + diceValue;
-    if(newPos > 16) return; // Can't overshoot center
+    if(newPos > 16) return;
 
-    // Check if killing
     checkKill(color, idx, newPos);
     tokens[color][idx] = newPos;
 
@@ -292,21 +356,23 @@ function moveToken(color, idx) {
 }
 
 function checkKill(color, idx, newPos) {
-  if(newPos === 16) return; // No killing at center
+  if(newPos === 16) return;
 
   colors.forEach(otherColor => {
     if(otherColor === color) return;
     tokens[otherColor].forEach((tPos, tIdx) => {
       if(tPos === newPos && tPos < 16) {
-        tokens[otherColor][tIdx] = -1; // Send home
+        tokens[otherColor][tIdx] = -1;
       }
     });
   });
 }
 
 function endTurn() {
+  updateProgress();
+
   if(tokens[colors[currentPlayer]].every(p => p === 16)) {
-    alert(colors[currentPlayer] + ' Wins! 🎉');
+    alert(playerNames[currentPlayer] + ' Wins! 🎉');
     gameOver = true;
     return;
   }
@@ -320,8 +386,9 @@ function nextTurn() {
   hasRolled = false;
   diceValue = 0;
   document.getElementById('dice').textContent = '🎲';
-  document.getElementById('turn').textContent = colors[currentPlayer] + "'s Turn";
+  document.getElementById('turn').textContent = playerNames[currentPlayer] + "'s Turn";
   document.getElementById('turn').style.color = colors[currentPlayer];
+  updateActiveCard();
 }
 
 createBoard();
