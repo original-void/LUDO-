@@ -2,179 +2,243 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Ludo Game</title>
 <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
   body {
-    margin: 0;
-    background: #1a1a2e;
+    background: linear-gradient(180deg, #3a4b7c 0%, #1e2a4a 100%);
+    font-family: 'Segoe UI', Roboto, sans-serif;
     color: #fff;
-    font-family: 'Segoe UI', sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 8px;
+    padding: 10px;
+    overflow-x: hidden;
   }
 
-  h1 {
-    margin: 0 0 8px;
-    background: linear-gradient(90deg, #ff2d2d, #00e676, #ffd600, #00b0ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+ .top-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+  }
+
+ .menu-icon {
     font-size: 28px;
-    font-weight: 900;
+    cursor: pointer;
+  }
+
+ .player-card {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.3);
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+ .player-card img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+  }
+
+ .player-name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+ .player-percent {
+    font-size: 11px;
+    opacity: 0.8;
+  }
+
+ .board-wrapper {
+    background: #d4b88a;
+    padding: 8px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    width: min(92vw, 420px);
   }
 
   #board {
     display: grid;
     grid-template-columns: repeat(15, 1fr);
     grid-template-rows: repeat(15, 1fr);
-    width: min(85vw, 420px);
-    height: min(85vw, 420px);
-    background: #222;
-    border: 2px solid #000;
+    width: 100%;
+    aspect-ratio: 1;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
     gap: 0.5px;
   }
 
  .cell {
-    background: #e8e8e8;
+    background: #f5f5f5;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
- .safe { background: #ffc400!important; border: 1px solid #ff9100; }
- .home-red { background: #ff1744!important; border: 1px solid #d50000; }
- .home-green { background: #00e676!important; border: 1px solid #00c853; }
- .home-yellow { background: #ffea00!important; border: 1px solid #ffd600; }
- .home-blue { background: #00b0ff!important; border: 1px solid #0091ea; }
- .path-red { background: #ff8a80!important; }
- .path-green { background: #69f0ae!important; }
- .path-yellow { background: #ffff8d!important; }
- .path-blue { background: #80d8ff!important; }
- .center { background: linear-gradient(45deg, #ff1744, #00e676, #ffea00, #00b0ff)!important; }
+ .home-green { background: #8bc34a; }
+ .home-yellow { background: #ffc107; }
+ .home-red { background: #f44336; }
+ .home-blue { background: #2196f3; }
+
+ .path-yellow { background: #fff59d; }
+ .path-red { background: #ef9a9a; }
+ .path-green { background: #aed581; }
+ .path-blue { background: #90caf9; }
+
+ .safe { background: #e0e0e0; }
+ .safe::after {
+    content: '🛡️';
+    font-size: 10px;
+    opacity: 0.6;
+  }
+
+ .center {
+    background: linear-gradient(135deg, #f44336 25%, #ffc107 25%, #ffc107 50%, #2196f3 50%, #2196f3 75%, #8bc34a 75%);
+  }
 
  .token {
-    width: 75%;
-    height: 75%;
-    border-radius: 50%;
-    border: 2px solid #000;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    width: 70%;
+    height: 70%;
+    position: relative;
     cursor: pointer;
-    transition: transform 0.15s;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
   }
 
- .token:hover { transform: scale(1.15); }
- .token.red { background: #ff1744; }
- .token.green { background: #00e676; }
- .token.yellow { background: #ffea00; }
- .token.blue { background: #00b0ff; }
-
- .controls {
-    margin-top: 12px;
-    text-align: center;
+ .token::before {
+    content: '';
+    position: absolute;
     width: 100%;
+    height: 100%;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    border: 2px solid rgba(0,0,0,0.2);
   }
 
- .dice-container {
+ .token.red::before { background: #f44336; }
+ .token.green::before { background: #8bc34a; }
+ .token.yellow::before { background: #ffc107; }
+ .token.blue::before { background: #2196f3; }
+
+ .home-dots {
+    position: absolute;
+    inset: 15%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+  }
+
+ .home-dot {
+    background: rgba(0,0,0,0.15);
+    border-radius: 50%;
+  }
+
+ .bottom-controls {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+  }
+
+ .dice-box {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+ .dice-box:active { transform: scale(0.95); }
+
+ .dice-box.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+ .turn-indicator {
+    text-align: center;
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+ .arrow {
+    position: absolute;
+    font-size: 20px;
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+
+ .bottom-nav {
+    margin-top: auto;
+    width: 100%;
     display: flex;
     justify-content: space-around;
-    gap: 6px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-
- .dice-btn {
-    flex: 1;
-    min-width: 70px;
-    padding: 8px 4px;
-    font-size: 14px;
-    font-weight: bold;
-    border: 2px solid #000;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-    opacity: 0.4;
-  }
-
- .dice-btn.active {
-    opacity: 1;
-    transform: scale(1.05);
-    box-shadow: 0 0 12px currentColor;
-  }
-
- .dice-btn.red { background: #ff1744; color: white; }
- .dice-btn.green { background: #00e676; color: #000; }
- .dice-btn.yellow { background: #ffea00; color: #000; }
- .dice-btn.blue { background: #00b0ff; color: white; }
-
- .dice-btn:disabled { cursor: not-allowed; }
-
- .dice-value {
-    font-size: 24px;
-    display: block;
-  }
-
-  #turn {
-    font-size: 18px;
-    margin-bottom: 8px;
-    font-weight: bold;
-  }
-
- .player-info {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
- .player-badge {
-    padding: 4px 10px;
+    padding: 15px 0;
+    background: rgba(0,0,0,0.2);
     border-radius: 15px;
-    font-weight: bold;
-    font-size: 13px;
-    border: 2px solid #000;
+    margin-top: 20px;
   }
 
- .badge-red { background: #ff1744; }
- .badge-green { background: #00e676; color: #000; }
- .badge-yellow { background: #ffea00; color: #000; }
- .badge-blue { background: #00b0ff; }
+ .nav-btn {
+    background: rgba(0,0,0,0.3);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 
-<h1>🎲 LUDO GAME 🎲</h1>
-
-<div class="player-info">
-  <div class="player-badge badge-red">Red</div>
-  <div class="player-badge badge-green">Green</div>
-  <div class="player-badge badge-yellow">Yellow</div>
-  <div class="player-badge badge-blue">Blue</div>
+<div class="top-bar">
+  <div class="menu-icon">☰</div>
+  <div class="player-card" style="margin-left:auto;">
+    <img src="https://i.pravatar.cc/40?img=5" alt="">
+    <div>
+      <div class="player-name">Amala So..</div>
+      <div class="player-percent">32%</div>
+    </div>
+  </div>
 </div>
 
-<div id="turn">Red's Turn</div>
-<div id="board"></div>
+<div class="board-wrapper">
+  <div id="board"></div>
+</div>
 
-<div class="controls">
-  <div class="dice-container">
-    <button class="dice-btn red active" id="dice-red" onclick="rollDice(0)">
-      RED<br><span class="dice-value">🎲</span>
-    </button>
-    <button class="dice-btn green" id="dice-green" onclick="rollDice(1)">
-      GREEN<br><span class="dice-value">🎲</span>
-    </button>
-    <button class="dice-btn yellow" id="dice-yellow" onclick="rollDice(2)">
-      YELLOW<br><span class="dice-value">🎲</span>
-    </button>
-    <button class="dice-btn blue" id="dice-blue" onclick="rollDice(3)">
-      BLUE<br><span class="dice-value">🎲</span>
-    </button>
-  </div>
+<div class="turn-indicator" id="turn">Red's Turn</div>
+
+<div class="bottom-controls">
+  <div class="dice-box disabled" id="dice">🎲</div>
+</div>
+
+<div class="bottom-nav">
+  <button class="nav-btn">😊</button>
+  <button class="nav-btn">🎤</button>
+  <button class="nav-btn">💬</button>
 </div>
 
 <script>
@@ -217,11 +281,25 @@ function createBoard() {
       cell.dataset.row = row;
       cell.dataset.col = col;
 
-      if((row<6 && col<6)) cell.className += ' home-red';
-      else if((row<6 && col>8)) cell.className += ' home-green';
-      else if((row>8 && col<6)) cell.className += ' home-yellow';
-      else if((row>8 && col>8)) cell.className += ' home-blue';
-      else if(row===7 && col===7) cell.className += ' center';
+      if(row<6 && col<6) {
+        cell.className += ' home-red';
+        if(row>=2 && row<=3 && col>=2 && col<=3) cell.innerHTML = '<div class="home-dot"></div>';
+      }
+      else if(row<6 && col>8) {
+        cell.className += ' home-green';
+        if(row>=2 && row<=3 && col>=11 && col<=12) cell.innerHTML = '<div class="home-dot"></div>';
+      }
+      else if(row>8 && col<6) {
+        cell.className += ' home-yellow';
+        if(row>=11 && row<=12 && col>=2 && col<=3) cell.innerHTML = '<div class="home-dot"></div>';
+      }
+      else if(row>8 && col>8) {
+        cell.className += ' home-blue';
+        if(row>=11 && row<=12 && col>=11 && col<=12) cell.innerHTML = '<div class="home-dot"></div>';
+      }
+      else if(row===7 && col===7) {
+        cell.className += ' center';
+      }
       else {
         const pathIndex = path.findIndex(p => p[0]===row && p[1]===col);
         if(pathIndex!== -1) {
@@ -245,10 +323,10 @@ function renderTokens() {
       let row, col;
       if(token.home) {
         const homePos = {
-          red: [[1,1],[1,4],[4,1],[4,4]],
-          green: [[1,10],[1,13],[4,10],[4,13]],
-          yellow: [[10,1],[10,4],[13,1],[13,4]],
-          blue: [[10,10],[10,13],[13,10],[13,13]]
+          red: [[11,2],[11,3],[12,2],[12,3]],
+          green: [[2,11],[2,12],[3,11],[3,12]],
+          yellow: [[11,11],[11,12],[12,11],[12,12]],
+          blue: [[2,2],[2,3],[3,2],[3,3]]
         };
         [row, col] = homePos[color][idx];
       } else if(token.pos === 52) return;
@@ -265,18 +343,14 @@ function renderTokens() {
   });
 }
 
-function rollDice(playerIdx) {
-  if(playerIdx!== currentPlayer || hasRolled || gameOver) return;
-
+document.getElementById('dice').onclick = () => {
+  if(hasRolled || gameOver) return;
   diceValue = Math.floor(Math.random() * 6) + 1;
-  document.querySelectorAll('.dice-value')[playerIdx].textContent = diceValue;
+  document.getElementById('dice').textContent = diceValue;
   hasRolled = true;
-
   const movable = canMove();
-  if(!movable) {
-    setTimeout(nextTurn, 1200);
-  }
-}
+  if(!movable) setTimeout(nextTurn, 1200);
+};
 
 function canMove() {
   const color = colors[currentPlayer];
@@ -291,20 +365,17 @@ function moveToken(color, idx) {
   if(color!== colors[currentPlayer] ||!hasRolled || gameOver) return;
   const token = tokens[color][idx];
 
-  if(token.home) {
-    if(diceValue === 6) {
-      token.home = false;
-      token.pos = homeEntries[color];
-      checkKill(color, idx);
-      endTurn();
-    }
+  if(token.home && diceValue === 6) {
+    token.home = false;
+    token.pos = homeEntries[color];
+    checkKill(color, idx);
+    endTurn();
     return;
   }
 
   let newPos = token.pos + diceValue;
   if(newPos > 52) return;
   token.pos = newPos;
-
   if(newPos < 52) checkKill(color, idx);
   endTurn();
 }
@@ -341,22 +412,14 @@ function nextTurn() {
   currentPlayer = (currentPlayer + 1) % 4;
   hasRolled = false;
   diceValue = 0;
-  updateDiceUI();
+  document.getElementById('dice').textContent = '🎲';
+  document.getElementById('dice').classList.remove('disabled');
   document.getElementById('turn').textContent = colorNames[currentPlayer] + "'s Turn";
-  document.getElementById('turn').style.color = colors[currentPlayer];
-}
-
-function updateDiceUI() {
-  document.querySelectorAll('.dice-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', i === currentPlayer);
-    btn.disabled = i!== currentPlayer;
-    document.querySelectorAll('.dice-value')[i].textContent = '🎲';
-  });
+  document.getElementById('turn').style.color = colors[currentPlayer] === 'yellow'? '#ffc107' : colors[currentPlayer];
 }
 
 createBoard();
-updateDiceUI();
-document.getElementById('turn').style.color = colors[0];
+document.getElementById('dice').classList.remove('disabled');
 </script>
 
 </body>
