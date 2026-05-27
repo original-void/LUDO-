@@ -15,112 +15,135 @@
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 10px;
+    padding: 8px;
   }
 
   h1 {
-    margin: 0 0 10px;
-    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #f9ca24);
+    margin: 0 0 8px;
+    background: linear-gradient(90deg, #ff2d2d, #00e676, #ffd600, #00b0ff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    font-size: 32px;
+    font-size: 28px;
+    font-weight: 900;
   }
 
   #board {
     display: grid;
     grid-template-columns: repeat(15, 1fr);
     grid-template-rows: repeat(15, 1fr);
-    width: min(90vw, 500px);
-    height: min(90vw, 500px);
-    background: #fff;
-    border: 3px solid #333;
-    gap: 1px;
+    width: min(85vw, 420px);
+    height: min(85vw, 420px);
+    background: #222;
+    border: 2px solid #000;
+    gap: 0.5px;
   }
 
  .cell {
-    background: #f0f0f0;
+    background: #e8e8e8;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
- .safe { background: #ffd700!important; }
- .home-red { background: #ff6b6b!important; }
- .home-green { background: #4ecdc4!important; }
- .home-yellow { background: #f9ca24!important; }
- .home-blue { background: #45b7d1!important; }
- .path-red { background: #ffc9c9!important; }
- .path-green { background: #c9f9f5!important; }
- .path-yellow { background: #fff5c9!important; }
- .path-blue { background: #c9e9f9!important; }
- .center { background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #f9ca24, #45b7d1)!important; }
+ .safe { background: #ffc400!important; border: 1px solid #ff9100; }
+ .home-red { background: #ff1744!important; border: 1px solid #d50000; }
+ .home-green { background: #00e676!important; border: 1px solid #00c853; }
+ .home-yellow { background: #ffea00!important; border: 1px solid #ffd600; }
+ .home-blue { background: #00b0ff!important; border: 1px solid #0091ea; }
+ .path-red { background: #ff8a80!important; }
+ .path-green { background: #69f0ae!important; }
+ .path-yellow { background: #ffff8d!important; }
+ .path-blue { background: #80d8ff!important; }
+ .center { background: linear-gradient(45deg, #ff1744, #00e676, #ffea00, #00b0ff)!important; }
 
  .token {
-    width: 70%;
-    height: 70%;
+    width: 75%;
+    height: 75%;
     border-radius: 50%;
-    border: 2px solid #333;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    border: 2px solid #000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.15s;
   }
 
- .token:hover { transform: scale(1.1); }
- .token.red { background: #ff6b6b; }
- .token.green { background: #4ecdc4; }
- .token.yellow { background: #f9ca24; }
- .token.blue { background: #45b7d1; }
+ .token:hover { transform: scale(1.15); }
+ .token.red { background: #ff1744; }
+ .token.green { background: #00e676; }
+ .token.yellow { background: #ffea00; }
+ .token.blue { background: #00b0ff; }
 
  .controls {
-    margin-top: 15px;
+    margin-top: 12px;
     text-align: center;
+    width: 100%;
   }
 
-  button {
-    padding: 12px 24px;
-    font-size: 18px;
+ .dice-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 6px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+ .dice-btn {
+    flex: 1;
+    min-width: 70px;
+    padding: 8px 4px;
+    font-size: 14px;
     font-weight: bold;
-    border: none;
-    border-radius: 10px;
+    border: 2px solid #000;
+    border-radius: 8px;
     cursor: pointer;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    transition: transform 0.2s;
+    transition: all 0.2s;
+    opacity: 0.4;
   }
 
-  button:hover { transform: scale(1.05); }
-  button:disabled { opacity: 0.5; cursor: not-allowed; }
+ .dice-btn.active {
+    opacity: 1;
+    transform: scale(1.05);
+    box-shadow: 0 0 12px currentColor;
+  }
 
-  #dice {
-    font-size: 48px;
-    margin: 10px 0;
+ .dice-btn.red { background: #ff1744; color: white; }
+ .dice-btn.green { background: #00e676; color: #000; }
+ .dice-btn.yellow { background: #ffea00; color: #000; }
+ .dice-btn.blue { background: #00b0ff; color: white; }
+
+ .dice-btn:disabled { cursor: not-allowed; }
+
+ .dice-value {
+    font-size: 24px;
+    display: block;
   }
 
   #turn {
-    font-size: 20px;
-    margin-bottom: 10px;
+    font-size: 18px;
+    margin-bottom: 8px;
     font-weight: bold;
   }
 
  .player-info {
     display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
     flex-wrap: wrap;
     justify-content: center;
   }
 
  .player-badge {
-    padding: 5px 12px;
-    border-radius: 20px;
+    padding: 4px 10px;
+    border-radius: 15px;
     font-weight: bold;
+    font-size: 13px;
+    border: 2px solid #000;
   }
 
- .badge-red { background: #ff6b6b; }
- .badge-green { background: #4ecdc4; }
- .badge-yellow { background: #f9ca24; color: #333; }
- .badge-blue { background: #45b7d1; }
+ .badge-red { background: #ff1744; }
+ .badge-green { background: #00e676; color: #000; }
+ .badge-yellow { background: #ffea00; color: #000; }
+ .badge-blue { background: #00b0ff; }
 </style>
 </head>
 <body>
@@ -135,11 +158,23 @@
 </div>
 
 <div id="turn">Red's Turn</div>
-<div id="dice">🎲</div>
 <div id="board"></div>
 
 <div class="controls">
-  <button id="rollBtn">Roll Dice</button>
+  <div class="dice-container">
+    <button class="dice-btn red active" id="dice-red" onclick="rollDice(0)">
+      RED<br><span class="dice-value">🎲</span>
+    </button>
+    <button class="dice-btn green" id="dice-green" onclick="rollDice(1)">
+      GREEN<br><span class="dice-value">🎲</span>
+    </button>
+    <button class="dice-btn yellow" id="dice-yellow" onclick="rollDice(2)">
+      YELLOW<br><span class="dice-value">🎲</span>
+    </button>
+    <button class="dice-btn blue" id="dice-blue" onclick="rollDice(3)">
+      BLUE<br><span class="dice-value">🎲</span>
+    </button>
+  </div>
 </div>
 
 <script>
@@ -151,7 +186,6 @@ let hasRolled = false;
 let tokens = {};
 let gameOver = false;
 
-// Initialize tokens
 colors.forEach(color => {
   tokens[color] = [
     {pos: -1, home: true},
@@ -161,7 +195,6 @@ colors.forEach(color => {
   ];
 });
 
-// Board path coordinates - standard Ludo path
 const path = [
   [6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
   [0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
@@ -170,14 +203,9 @@ const path = [
   [7,0],[7,1]
 ];
 
-// Safe positions
 const safePositions = [0, 8, 13, 21, 26, 34, 39, 47];
-
-// Home entries
 const homeEntries = {red: 0, green: 13, yellow: 26, blue: 39};
-const startPositions = {red: 0, green: 13, yellow: 26, blue: 39};
 
-// Create board
 function createBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
@@ -189,14 +217,12 @@ function createBoard() {
       cell.dataset.row = row;
       cell.dataset.col = col;
 
-      // Define areas
       if((row<6 && col<6)) cell.className += ' home-red';
       else if((row<6 && col>8)) cell.className += ' home-green';
       else if((row>8 && col<6)) cell.className += ' home-yellow';
       else if((row>8 && col>8)) cell.className += ' home-blue';
       else if(row===7 && col===7) cell.className += ' center';
       else {
-        // Path cells
         const pathIndex = path.findIndex(p => p[0]===row && p[1]===col);
         if(pathIndex!== -1) {
           if(safePositions.includes(pathIndex)) cell.className += ' safe';
@@ -206,23 +232,18 @@ function createBoard() {
           if(pathIndex>=39 && pathIndex<=51) cell.className += ' path-blue';
         }
       }
-
       board.appendChild(cell);
     }
   }
   renderTokens();
 }
 
-// Render tokens on board
 function renderTokens() {
   document.querySelectorAll('.token').forEach(t => t.remove());
-
   colors.forEach(color => {
     tokens[color].forEach((token, idx) => {
       let row, col;
-
       if(token.home) {
-        // Home positions
         const homePos = {
           red: [[1,1],[1,4],[4,1],[4,4]],
           green: [[1,10],[1,13],[4,10],[4,13]],
@@ -230,12 +251,8 @@ function renderTokens() {
           blue: [[10,10],[10,13],[13,10],[13,13]]
         };
         [row, col] = homePos[color][idx];
-      } else if(token.pos === 52) {
-        // Finished
-        return;
-      } else {
-        [row, col] = path[token.pos];
-      }
+      } else if(token.pos === 52) return;
+      else [row, col] = path[token.pos];
 
       const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
       if(cell) {
@@ -248,21 +265,19 @@ function renderTokens() {
   });
 }
 
-// Roll dice
-document.getElementById('rollBtn').onclick = () => {
-  if(hasRolled || gameOver) return;
+function rollDice(playerIdx) {
+  if(playerIdx!== currentPlayer || hasRolled || gameOver) return;
 
   diceValue = Math.floor(Math.random() * 6) + 1;
-  document.getElementById('dice').textContent = diceValue;
+  document.querySelectorAll('.dice-value')[playerIdx].textContent = diceValue;
   hasRolled = true;
 
   const movable = canMove();
   if(!movable) {
-    setTimeout(nextTurn, 1000);
+    setTimeout(nextTurn, 1200);
   }
-};
+}
 
-// Check if current player can move
 function canMove() {
   const color = colors[currentPlayer];
   return tokens[color].some(token => {
@@ -272,13 +287,10 @@ function canMove() {
   });
 }
 
-// Move token
 function moveToken(color, idx) {
   if(color!== colors[currentPlayer] ||!hasRolled || gameOver) return;
-
   const token = tokens[color][idx];
 
-  // Move out of home
   if(token.home) {
     if(diceValue === 6) {
       token.home = false;
@@ -289,21 +301,17 @@ function moveToken(color, idx) {
     return;
   }
 
-  // Normal move
   let newPos = token.pos + diceValue;
-  if(newPos > 52) return; // Can't move past finish
-
+  if(newPos > 52) return;
   token.pos = newPos;
 
   if(newPos < 52) checkKill(color, idx);
   endTurn();
 }
 
-// Check if token kills another
 function checkKill(color, idx) {
   const token = tokens[color][idx];
   if(safePositions.includes(token.pos)) return;
-
   colors.forEach(otherColor => {
     if(otherColor === color) return;
     tokens[otherColor].forEach(t => {
@@ -315,40 +323,41 @@ function checkKill(color, idx) {
   });
 }
 
-// End turn logic
 function endTurn() {
   renderTokens();
-
-  // Check win
   if(tokens[colors[currentPlayer]].every(t => t.pos === 52)) {
     alert(colorNames[currentPlayer] + ' Wins! 🎉');
     gameOver = true;
     return;
   }
-
-  // If rolled 6, play again
   if(diceValue === 6) {
     hasRolled = false;
     return;
   }
-
   nextTurn();
 }
 
-// Next player turn
 function nextTurn() {
   currentPlayer = (currentPlayer + 1) % 4;
   hasRolled = false;
   diceValue = 0;
-  document.getElementById('dice').textContent = '🎲';
+  updateDiceUI();
   document.getElementById('turn').textContent = colorNames[currentPlayer] + "'s Turn";
   document.getElementById('turn').style.color = colors[currentPlayer];
 }
 
-// Initialize game
+function updateDiceUI() {
+  document.querySelectorAll('.dice-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', i === currentPlayer);
+    btn.disabled = i!== currentPlayer;
+    document.querySelectorAll('.dice-value')[i].textContent = '🎲';
+  });
+}
+
 createBoard();
+updateDiceUI();
 document.getElementById('turn').style.color = colors[0];
 </script>
 
 </body>
-                                                 </html>
+</html>
