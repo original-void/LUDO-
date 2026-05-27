@@ -3,11 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>HD Ludo</title>
+<title>HD Ludo 4x4</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&display=swap');
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     background: radial-gradient(circle at 20% 20%, #4a5f9c 0%, #1e2a4a 70%, #0f172a 100%);
@@ -17,101 +15,64 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 12px;
-    overflow-x: hidden;
   }
 
-.top-bar {
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    margin-bottom: 14px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-
-.menu-icon { font-size: 26px; cursor: pointer; opacity: 0.9; }
-
-.player-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(255,255,255,0.12);
-    padding: 6px 14px;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-
-.player-card img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.8);
-    box-shadow: 0 0 12px rgba(255,255,255,0.3);
-  }
-
-.player-name { font-size: 14px; font-weight: 700; }
-.player-percent { font-size: 12px; opacity: 0.8; }
-
+  /* 4x4 board layout */
 .board-wrapper {
     background: linear-gradient(145deg, #e8d5b7, #c9b088);
     padding: 12px;
     border-radius: 28px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), inset 0 2px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(0,0,0,0.2);
-    width: min(92vw, 480px);
-    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    width: min(90vw, 400px);
   }
 
   #board {
     display: grid;
-    grid-template-columns: repeat(15, 1fr);
-    grid-template-rows: repeat(15, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     width: 100%;
     aspect-ratio: 1;
     background: #fafafa;
     border-radius: 20px;
-    overflow: hidden;
-    gap: 0.8px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.1);
+    gap: 2px;
     position: relative;
+    overflow: hidden;
   }
 
 .cell {
-    background: #f8f8f8;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-.home-red { background: linear-gradient(135deg, #ff5252, #d32f2f); }
-.home-green { background: linear-gradient(135deg, #66bb6a, #388e3c); }
-.home-yellow { background: linear-gradient(135deg, #ffd54f, #fbc02d); }
-.home-blue { background: linear-gradient(135deg, #42a5f5, #1976d2); }
+  /* 4 colored homes - corners */
+.home-red { background: linear-gradient(135deg, #ff5252, #d32f2f); border-radius: 20px 0 0 0; }
+.home-green { background: linear-gradient(135deg, #66bb6a, #388e3c); border-radius: 0 20px 0 0; }
+.home-yellow { background: linear-gradient(135deg, #ffd54f, #fbc02d); border-radius: 0 0 0 20px; }
+.home-blue { background: linear-gradient(135deg, #42a5f5, #1976d2); border-radius: 0 0 20px 0; }
 
-.path-red { background: linear-gradient(135deg, #ffcdd2, #ef9a9a); }
-.path-green { background: linear-gradient(135deg, #c8e6c9, #a5d6a7); }
-.path-yellow { background: linear-gradient(135deg, #fff9c4, #fff59d); }
-.path-blue { background: linear-gradient(135deg, #bbdefb, #90caf9); }
+  /* Center */
+.center {
+    background: conic-gradient(from 45deg, #f44336, #ffc107, #2196f3, #8bc34a, #f44336);
+    border-radius: 12px;
+  }
 
-.safe { background: #e8e8e8; }
-.safe::after { content: '🛡️'; font-size: 11px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); }
+  /* Path arms */
+.path {
+    background: #e0e0e0;
+  }
 
-.center { background: conic-gradient(from 45deg, #f44336, #ffc107, #2196f3, #8bc34a, #f44336); }
-
+  /* HD 3D Tokens - smaller now */
 .token {
-    width: 88%;
-    height: 88%;
+    width: 65%;
+    height: 65%;
     position: absolute;
     cursor: pointer;
-    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.4));
-    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     z-index: 10;
   }
 
@@ -122,60 +83,36 @@
     height: 100%;
     border-radius: 50%;
     border: 2px solid rgba(0,0,0,0.25);
-    box-shadow: inset 0 -6px 0 rgba(0,0,0,0.25), inset 0 6px 0 rgba(255,255,255,0.4), inset 0 0 15px rgba(255,255,255,0.3);
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,0.25), inset 0 4px 0 rgba(255,255,255,0.4);
   }
 
-.token.red::before { background: radial-gradient(circle at 30% 25%, #ff8a80, #f44336 60%, #c62828); }
-.token.green::before { background: radial-gradient(circle at 30% 25%, #aed581, #66bb6a 60%, #388e3c); }
-.token.yellow::before { background: radial-gradient(circle at 30% 25%, #ffe082, #ffd54f 60%, #f9a825); }
-.token.blue::before { background: radial-gradient(circle at 30% 25%, #90caf9, #42a5f5 60%, #1565c0); }
+.token.red::before { background: radial-gradient(circle at 30% 25%, #ff8a80, #f44336); }
+.token.green::before { background: radial-gradient(circle at 30% 25%, #aed581, #66bb6a); }
+.token.yellow::before { background: radial-gradient(circle at 30% 25%, #ffe082, #ffd54f); }
+.token.blue::before { background: radial-gradient(circle at 30% 25%, #90caf9, #42a5f5); }
 
-.home-dots {
-    position: absolute;
-    inset: 15%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 8px;
-  }
-
-.home-dot {
-    background: rgba(0,0,0,0.15);
-    border-radius: 50%;
-    border: 1px solid rgba(0,0,0,0.25);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-  }
-
+  /* Dice */
 .dice-box {
-    width: 78px;
-    height: 78px;
+    width: 70px;
+    height: 70px;
     background: linear-gradient(145deg, #ffffff, #f0f0f0);
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 44px;
+    font-size: 40px;
     font-weight: 700;
     color: #1a1a1a;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.8), inset 0 -2px 0 rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     cursor: pointer;
-    transition: all 0.15s;
     margin: 18px auto;
-    border: 1px solid rgba(255,255,255,0.5);
   }
 
-.dice-box:active { transform: scale(0.93); }
-.dice-box.disabled { opacity: 0.4; pointer-events: none; }
-
-.dice-rolling { animation: rollDice 0.9s cubic-bezier(0.36, 0, 0.66, -0.56); }
+.dice-rolling { animation: rollDice 0.9s ease-out; }
 
   @keyframes rollDice {
-    0% { transform: rotate(0deg) scale(1); }
-    20% { transform: rotate(120deg) scale(1.15); }
-    40% { transform: rotate(240deg) scale(1.25); }
-    60% { transform: rotate(360deg) scale(1.15); }
-    80% { transform: rotate(480deg) scale(1.05); }
-    100% { transform: rotate(600deg) scale(1); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(720deg); }
   }
 
 .turn-indicator {
@@ -185,150 +122,75 @@
     font-weight: 700;
     text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
-
-.bottom-nav {
-    margin-top: auto;
-    width: 100%;
-    max-width: 500px;
-    display: flex;
-    justify-content: space-around;
-    padding: 16px;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 20px;
-    margin-top: 24px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  }
-
-.nav-btn {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    padding: 12px 24px;
-    border-radius: 16px;
-    color: #fff;
-    font-size: 22px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-
-.nav-btn:active { transform: scale(0.92); }
-
- /* Particle effect */
-.particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 20;
-    animation: explode 0.8s ease-out forwards;
-  }
-
-  @keyframes explode {
-    0% { transform: scale(1) translate(0,0); opacity: 1; }
-    100% { transform: scale(0) translate(var(--x), var(--y)); opacity: 0; }
-  }
 </style>
 </head>
 <body>
-
-<div class="top-bar">
-  <div class="menu-icon">☰</div>
-  <div class="player-card" style="margin-left:auto;">
-    <img src="https://i.pravatar.cc/40?img=5" alt="">
-    <div>
-      <div class="player-name">Amala So..</div>
-      <div class="player-percent">32%</div>
-    </div>
-  </div>
-</div>
 
 <div class="board-wrapper">
   <div id="board"></div>
 </div>
 
-<div class="turn-indicator" id="turn">Blue's Turn</div>
+<div class="turn-indicator" id="turn">Red's Turn</div>
 <div class="dice-box" id="dice">🎲</div>
-
-<div class="bottom-nav">
-  <button class="nav-btn">😊</button>
-  <button class="nav-btn">🎤</button>
-  <button class="nav-btn">💬</button>
-</div>
 
 <script>
 const colors = ['red', 'green', 'yellow', 'blue'];
-const colorNames = ['Red', 'Green', 'Yellow', 'Blue'];
-let currentPlayer = 3;
+let currentPlayer = 0;
 let diceValue = 0;
 let hasRolled = false;
-let tokens = {};
 let gameOver = false;
 let isRolling = false;
-let tokenElements = {};
 
-colors.forEach(color => {
-  tokens[color] = [
-    {pos: -1, home: true},
-    {pos: -1, home: true},
-    {pos: -1, home: true},
-    {pos: -1, home: true}
-  ];
-  tokenElements[color] = [null,null];
-});
+// 4 tokens per color, -1 = home, 0-15 = path positions, 16 = center
+let tokens = {};
+colors.forEach(c => tokens[c] = [-1,-1,-1,-1]);
 
-const path = [
-  [6,1],[6,2],[6,3],[6,4],[6,5],[5,6],[4,6],[3,6],[2,6],[1,6],[0,6],
-  [0,7],[0,8],[1,8],[2,8],[3,8],[4,8],[5,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],
-  [7,14],[8,14],[8,13],[8,12],[8,11],[8,10],[8,9],[9,8],[10,8],[11,8],[12,8],[13,8],[14,8],
-  [14,7],[14,6],[13,6],[12,6],[11,6],[10,6],[9,6],[8,5],[8,4],[8,3],[8,2],[8,1],[8,0],
-  [7,0],[7,1]
+// Path layout for 4x4 board:
+// 0: Red arm, 1: Green arm, 2: Yellow arm, 3: Blue arm
+// Each arm has 4 steps to center
+const pathCoords = [
+  // Red arm: row 0, col 1-2-3-3
+  [0,1], [0,2], [0,3], [1,3],
+  // Green arm: row 1-2-3, col 3
+  [2,3], [3,3], [3,2], [3,1],
+  // Yellow arm: row 3, col 0-1-2
+  [3,0], [2,0], [1,0], [0,0],
+  // Blue arm: row 0-1-2, col 0
+  [1,1], [2,1], [2,2], [1,2] // These 4 lead to center
 ];
 
-const safePositions = [0, 8, 13, 21, 26, 34, 39, 47];
-const homeEntries = {red: 0, green: 13, yellow: 26, blue: 39};
+const homePositions = {
+  red: [[0,0]],
+  green: [[0,3]],
+  yellow: [[3,0]],
+  blue: [[3,3]]
+};
+
+const centerPos = [1,2]; // Center cell
 
 function createBoard() {
   const board = document.getElementById('board');
   board.innerHTML = '';
 
-  for(let row=0; row<15; row++) {
-    for(let col=0; col<15; col++) {
+  // Create 4x4 grid
+  for(let r=0; r<4; r++) {
+    for(let c=0; c<4; c++) {
       const cell = document.createElement('div');
       cell.className = 'cell';
-      cell.dataset.row = row;
-      cell.dataset.col = col;
+      cell.dataset.row = r;
+      cell.dataset.col = c;
 
-      if(row<6 && col<6) {
-        cell.className += ' home-red';
-        if(row>=2 && row<=3 && col>=2 && col<=3) cell.innerHTML = '<div class="home-dot"></div>';
-      }
-      else if(row<6 && col>8) {
-        cell.className += ' home-green';
-        if(row>=2 && row<=3 && col>=11 && col<=12) cell.innerHTML = '<div class="home-dot"></div>';
-      }
-      else if(row>8 && col<6) {
-        cell.className += ' home-yellow';
-        if(row>=11 && row<=12 && col>=2 && col<=3) cell.innerHTML = '<div class="home-dot"></div>';
-      }
-      else if(row>8 && col>8) {
-        cell.className += ' home-blue';
-        if(row>=11 && row<=12 && col>=11 && col<=12) cell.innerHTML = '<div class="home-dot"></div>';
-      }
-      else if(row===7 && col===7) {
+      if(r===0 && c===0) cell.className += ' home-red';
+      else if(r===0 && c===3) cell.className += ' home-green';
+      else if(r===3 && c===0) cell.className += ' home-yellow';
+      else if(r===3 && c===3) cell.className += ' home-blue';
+      else if(r===1 && c===1 || r===1 && c===2 || r===2 && c===1 || r===2 && c===2) {
         cell.className += ' center';
       }
       else {
-        const pathIndex = path.findIndex(p => p[0]===row && p[1]===col);
-        if(pathIndex!== -1) {
-          if(safePositions.includes(pathIndex)) cell.className += ' safe';
-          if(pathIndex>=0 && pathIndex<=12) cell.className += ' path-red';
-          if(pathIndex>=13 && pathIndex<=25) cell.className += ' path-green';
-          if(pathIndex>=26 && pathIndex<=38) cell.className += ' path-yellow';
-          if(pathIndex>=39 && pathIndex<=51) cell.className += ' path-blue';
-        }
+        cell.className += ' path';
       }
+
       board.appendChild(cell);
     }
   }
@@ -338,11 +200,12 @@ function createBoard() {
 
 function createTokens() {
   colors.forEach(color => {
-    tokens[color].forEach((token, idx) => {
+    tokens[color].forEach((pos, idx) => {
       const tokenEl = document.createElement('div');
       tokenEl.className = `token ${color}`;
+      tokenEl.dataset.color = color;
+      tokenEl.dataset.idx = idx;
       tokenEl.onclick = () => moveToken(color, idx);
-      tokenElements[color][idx] = tokenEl;
       document.getElementById('board').appendChild(tokenEl);
     });
   });
@@ -350,148 +213,106 @@ function createTokens() {
 
 function positionTokens() {
   colors.forEach(color => {
-    tokens[color].forEach((token, idx) => {
+    tokens[color].forEach((pos, idx) => {
+      const tokenEl = document.querySelector(`.token[data-color="${color}"][data-idx="${idx}"]`);
       let row, col;
-      if(token.home) {
-        const homePos = {
-          red: [[11,2],[11,3],[12,2],[12,3]],
-          green: [[2,11],[2,12],[3,11],[3,12]],
-          yellow: [[11,11],[11,12],[12,11],[12,12]],
-          blue: [[2,2],[2,3],[3,2],[3,3]]
-        };
-        [row, col] = homePos[color][idx];
-      } else if(token.pos === 52) {
-        tokenElements[color][idx].style.display = 'none';
-        return;
+
+      if(pos === -1) {
+        // In home
+        [row, col] = homePositions[color][0];
+      } else if(pos === 16) {
+        // At center
+        [row, col] = centerPos;
       } else {
-        [row, col] = path[token.pos];
+        // On path
+        [row, col] = pathCoords[pos];
       }
 
       const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-      if(cell && tokenElements[color][idx]) {
-        const rect = cell.getBoundingClientRect();
-        const boardRect = document.getElementById('board').getBoundingClientRect();
-        tokenElements[color][idx].style.display = 'block';
-        tokenElements[color][idx].style.left = (rect.left - boardRect.left + rect.width/2 - 15) + 'px';
-        tokenElements[color][idx].style.top = (rect.top - boardRect.top + rect.height/2 - 15) + 'px';
-      }
+      const boardRect = document.getElementById('board').getBoundingClientRect();
+      const cellRect = cell.getBoundingClientRect();
+
+      tokenEl.style.left = (cellRect.left - boardRect.left + cellRect.width/2 - 20) + 'px';
+      tokenEl.style.top = (cellRect.top - boardRect.top + cellRect.height/2 - 20) + 'px';
     });
   });
 }
 
 document.getElementById('dice').onclick = () => {
   if(hasRolled || gameOver || isRolling) return;
-  rollDiceWithAnimation();
-};
 
-function rollDiceWithAnimation() {
   isRolling = true;
   const diceEl = document.getElementById('dice');
   diceEl.classList.add('dice-rolling');
-  diceEl.textContent = '🎲';
 
-  let rollCount = 0;
-  const rollInterval = setInterval(() => {
-    diceEl.textContent = Math.floor(Math.random() * 6) + 1;
-    rollCount++;
-    if(rollCount >= 9) {
-      clearInterval(rollInterval);
-      diceValue = Math.floor(Math.random() * 6) + 1;
-      diceEl.textContent = diceValue;
-      diceEl.classList.remove('dice-rolling');
-      isRolling = false;
-      hasRolled = true;
+  setTimeout(() => {
+    diceValue = Math.floor(Math.random() * 6) + 1;
+    diceEl.textContent = diceValue;
+    diceEl.classList.remove('dice-rolling');
+    isRolling = false;
+    hasRolled = true;
 
-      const movable = canMove();
-      if(!movable) setTimeout(nextTurn, 1200);
-    }
-  }, 100);
-}
+    if(!canMove()) setTimeout(nextTurn, 1000);
+  }, 900);
+};
 
 function canMove() {
   const color = colors[currentPlayer];
-  return tokens[color].some(token => {
-    if(token.pos === 52) return false;
-    if(token.home) return diceValue === 6;
+  return tokens[color].some(pos => {
+    if(pos === 16) return false; // Already at center
+    if(pos === -1) return diceValue === 6; // Need 6 to exit home
     return true;
   });
 }
 
 function moveToken(color, idx) {
   if(color!== colors[currentPlayer] ||!hasRolled || gameOver || isRolling) return;
-  const token = tokens[color][idx];
 
-  if(token.home && diceValue === 6) {
-    token.home = false;
-    token.pos = homeEntries[color];
-    checkKill(color, idx, true);
+  let pos = tokens[color][idx];
+
+  // Exit home on 6
+  if(pos === -1 && diceValue === 6) {
+    tokens[color][idx] = 0; // Start of red arm
+    positionTokens();
+    endTurn();
     return;
   }
 
-  let newPos = token.pos + diceValue;
-  if(newPos > 52) return;
-  token.pos = newPos;
+  if(pos >= 0) {
+    let newPos = pos + diceValue;
+    if(newPos > 16) return; // Can't overshoot center
 
-  positionTokens();
-  setTimeout(() => {
-    if(newPos < 52) checkKill(color, idx, false);
-    endTurn();
-  }, 350);
+    // Check if killing
+    checkKill(color, idx, newPos);
+    tokens[color][idx] = newPos;
+
+    positionTokens();
+    setTimeout(() => endTurn(), 400);
+  }
 }
 
-function checkKill(color, idx, isFromHome) {
-  const token = tokens[color][idx];
-  if(safePositions.includes(token.pos)) return;
+function checkKill(color, idx, newPos) {
+  if(newPos === 16) return; // No killing at center
 
   colors.forEach(otherColor => {
     if(otherColor === color) return;
-    tokens[otherColor].forEach((t, tIdx) => {
-      if(!t.home && t.pos === token.pos && t.pos < 52) {
-        createParticles(token.pos);
-        t.home = true;
-        t.pos = -1;
-        setTimeout(() => positionTokens(), 100);
+    tokens[otherColor].forEach((tPos, tIdx) => {
+      if(tPos === newPos && tPos < 16) {
+        tokens[otherColor][tIdx] = -1; // Send home
       }
     });
   });
 }
 
-function createParticles(pos) {
-  const [row, col] = path[pos];
-  const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
-  if(!cell) return;
-
-  const rect = cell.getBoundingClientRect();
-  const boardRect = document.getElementById('board').getBoundingClientRect();
-  const x = rect.left - boardRect.left + rect.width/2;
-  const y = rect.top - boardRect.top + rect.height/2;
-
-  for(let i=0; i<12; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.background = colors[currentPlayer];
-    particle.style.left = x + 'px';
-    particle.style.top = y + 'px';
-    const angle = (i / 12) * 2 * Math.PI;
-    const distance = 40;
-    particle.style.setProperty('--x', Math.cos(angle) * distance + 'px');
-    particle.style.setProperty('--y', Math.sin(angle) * distance + 'px');
-    document.getElementById('board').appendChild(particle);
-    setTimeout(() => particle.remove(), 800);
-  }
-}
-
 function endTurn() {
-  if(tokens[colors[currentPlayer]].every(t => t.pos === 52)) {
-    setTimeout(() => alert(colorNames[currentPlayer] + ' Wins! 🎉'), 400);
+  if(tokens[colors[currentPlayer]].every(p => p === 16)) {
+    alert(colors[currentPlayer] + ' Wins! 🎉');
     gameOver = true;
     return;
   }
-  if(diceValue === 6) {
-    hasRolled = false;
-    return;
-  }
-  nextTurn();
+
+  if(diceValue!== 6) nextTurn();
+  else hasRolled = false;
 }
 
 function nextTurn() {
@@ -499,8 +320,8 @@ function nextTurn() {
   hasRolled = false;
   diceValue = 0;
   document.getElementById('dice').textContent = '🎲';
-  document.getElementById('turn').textContent = colorNames[currentPlayer] + "'s Turn";
-  document.getElementById('turn').style.color = colors[currentPlayer] === 'yellow'? '#ffd54f' : colors[currentPlayer];
+  document.getElementById('turn').textContent = colors[currentPlayer] + "'s Turn";
+  document.getElementById('turn').style.color = colors[currentPlayer];
 }
 
 createBoard();
